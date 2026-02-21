@@ -1,0 +1,44 @@
+# =========================
+# Python bytecode
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+# Databases / generated data
+# =========================
+*.db
+results/
+
+# =========================
+# Large input files (local only)
+# =========================
+data/books/
+data/notebooks/
+
+# =========================
+# Temporary images
+# =========================
+test/temp_images/
+
+# =========================
+# Virtual environments
+# =========================
+venv/
+env/
+.env
+.venv/
+
+# =========================
+# IDE settings
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS junk
+# =========================
+.DS_Store
+Thumbs.db
