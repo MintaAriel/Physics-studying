@@ -163,12 +163,26 @@ def extract_region_two_corners(pdf_path, page_num, corner1, corner2, output_path
 
 
 
-notebook1_json = os.path.join(project_root, 'data', 'json', 'pages_sem_2_fixed.json')
+notebook1_json = os.path.join(project_root, 'data', 'json', 'pages_sem_2.json')
+notebook2_json = os.path.join(project_root, 'data', 'json', 'pages_sem_3.json')
+notebook3_json = os.path.join(project_root, 'data', 'json', 'pages_sem_4.json')
 chertov_json = os.path.join(project_root, 'data', 'json', 'Chertov_final.json')
 chertov_idx_json = os.path.join(project_root, 'data', 'json', 'Chertov_index.json')
 
 
-df_notebook = pd.read_json(notebook1_json,  dtype={'exercise_num': str})
+
+df_notebook_1 = pd.read_json(notebook1_json,  dtype={'exercise_num': str})
+df_notebook_2 = pd.read_json(notebook2_json,  dtype={'exercise_num': str})
+df_notebook_3 = pd.read_json(notebook3_json,  dtype={'exercise_num': str})
+
+df_notebook_1['notebook'] = 'Fisica_2.pdf'
+df_notebook_2['notebook'] = 'Fisica_3.pdf'
+df_notebook_3['notebook'] = 'Fisica_4.pdf'
+
+df_notebook = pd.concat([df_notebook_1, df_notebook_2, df_notebook_3], axis=0)
+df_notebook = df_notebook[df_notebook['exercise_num'] != 'None']
+df_notebook.reset_index(drop=True, inplace=True)
+
 df_book = pd.read_json(chertov_json)
 df_book_idx = pd.read_json(chertov_idx_json)
 
@@ -182,7 +196,7 @@ seminar_path = os.path.join(project_root, 'data', 'notebooks', 'Физика 2 �
 Chertov_path = os.path.join(project_root, 'data', 'books', 'Chertov.pdf')
 
 
-chertov = df_notebook[ df_notebook['Book'] == 'Chertov']
+chertov = df_notebook[ df_notebook['Book'] == 'Chertov'].copy()
 
 
 
@@ -217,7 +231,7 @@ def get_exercise(number):
         for i in range(results):
             row = exer_df.iloc[i]
             extract_region_two_corners(
-                pdf_path=seminar_path,
+                pdf_path=os.path.join(project_root, 'data', 'notebooks', row['notebook']),
                 page_num=int(row['page']),  # Page 1 (0-indexed)
                 corner1=(30, row['pdf_points'][0]-10),
                 corner2=(560, row['pdf_points'][1]),
@@ -275,14 +289,12 @@ def log_request(exercise_number, feedback=None):
 
 units = sorted(chertov['unit'].astype(int).unique())
 
-unit_map = {
-    str(unit): sorted(
-        chertov[chertov['unit'] == str(unit)]['subunit']
-        .astype(int)
-        .tolist()
-    )
-    for unit in units
-}
+unit_map = (
+    chertov
+    .groupby('unit')['subunit']
+    .apply(lambda x: sorted(x.astype(int).unique()))
+    .to_dict()
+)
 
 
 

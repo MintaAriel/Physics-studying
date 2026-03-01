@@ -10,17 +10,20 @@ WORKDIR /app
 # Copy project files
 COPY . /app
 
-# Install system dependencies (for PIL + PDFs if needed)
+# System dependencies
 RUN apt-get update && apt-get install -y \
     poppler-utils \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
+    
+# Upgrade pip first (important in slim images)
+RUN pip install --upgrade pip
 
 # Install Python dependencies
 RUN pip install --no-cache-dir \
     gradio \
     pillow \
-    pymupdf \
-    sqlite3
+    pymupdf 
 
 # Expose Gradio port
 EXPOSE 7860
