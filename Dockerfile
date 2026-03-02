@@ -21,6 +21,7 @@ RUN pip install --upgrade pip
 
 # Install Python dependencies
 RUN pip install --no-cache-dir \
+    pandas==2.3.2 \
     gradio \
     pillow \
     pymupdf 

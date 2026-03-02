@@ -192,7 +192,7 @@ df_book[['unit', 'subunit']] = df_book['exercise'].str.extract(r'(\d+)\.(\d+)')
 
 
 
-seminar_path = os.path.join(project_root, 'data', 'notebooks', 'Физика 2 семестр_2.pdf')
+# seminar_path = os.path.join(project_root, 'data', 'notebooks', 'Ф2.pdf')
 Chertov_path = os.path.join(project_root, 'data', 'books', 'Chertov.pdf')
 
 
